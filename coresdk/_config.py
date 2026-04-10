@@ -30,6 +30,7 @@ class SDKConfig:
     exclude_paths: list[str] = None  # type: ignore[assignment]
     service_token: str = ""
     api_key_prefix: str = ""
+    database_url: str = ""
 
     def __post_init__(self) -> None:
         if self.exclude_paths is None:
@@ -80,6 +81,7 @@ class SDKConfig:
             service_token=os.environ.get("CORESDK_SERVICE_TOKEN", ""),
             exclude_paths=_parse_exclude_paths(),
             api_key_prefix=os.environ.get("CORESDK_API_KEY_PREFIX", ""),
+            database_url=os.environ.get("DATABASE_URL", ""),
         )
         config.validate()
         return config
