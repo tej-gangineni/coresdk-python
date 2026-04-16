@@ -1011,3 +1011,120 @@ class CoreSDKClient:
             # Always fail-open for egress checks to avoid blocking legitimate traffic
             logger.warning("CheckEgress RPC failed, failing open: %s", e)
             return EgressDecision(allowed=True, reason="sidecar unreachable (fail-open)")
+
+    # =================================================================
+    # Control Plane HTTP methods (login, create_user, change_password)
+    #
+    # These talk to the control plane's REST API, NOT the sidecar's
+    # gRPC API. The control plane URL comes from config.control_plane_url.
+    # =================================================================
+
+    def _cp_url(self, path: str) -> str:
+        """Build a control plane URL from config."""
+        base = self.config.control_plane_url.rstrip("/")
+        if not base:
+            raise CoreSDKError(
+                "control_plane_url is not configured. Set CORESDK_CONTROL_PLANE_URL "
+                "or pass control_plane_url to SDKConfig."
+            )
+        return f"{base}{path}"
+
+    def _cp_headers(self) -> dict[str, str]:
+        """Build headers for control plane requests."""
+        headers: dict[str, str] = {"Content-Type": "application/json"}
+        if self.config.api_key_prefix:
+            headers["X-API-Key"] = self.config.api_key_prefix
+        elif self.config.service_token:
+            headers["Authorization"] = f"Bearer {self.config.service_token}"
+        return headers
+
+    def login(self, email: str, password: str) -> dict:
+        """Authenticate a user and return a signed JWT.
+
+        Calls POST /auth/login on the control plane.
+
+        Returns:
+            dict with keys: token, sub, tenant_id, user_name, roles, expires_at
+        """
+        import urllib.request
+        import urllib.error
+
+        url = self._cp_url("/auth/login")
+        body = json.dumps({"email": email, "password": password}).encode()
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"}, method="POST")
+
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read())
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode() if e.fp else ""
+            raise CoreSDKError(f"Login failed ({e.code}): {error_body}") from e
+        except Exception as e:
+            raise CoreSDKError(f"Login request failed: {e}") from e
+
+    def create_user(
+        self,
+        *,
+        email: str,
+        password: str | None = None,
+        user_name: str | None = None,
+        display_name: str | None = None,
+        active: bool = True,
+    ) -> dict:
+        """Create a user in the control plane's SCIM store.
+
+        Calls POST /scim/v2/Users on the control plane. The control plane
+        hashes the password with argon2 before storing.
+        """
+        import urllib.request
+        import urllib.error
+
+        url = self._cp_url("/scim/v2/Users")
+        payload: dict = {
+            "userName": user_name or email,
+            "email": email,
+            "active": active,
+        }
+        if password:
+            payload["password"] = password
+        if display_name:
+            payload["displayName"] = display_name
+
+        body = json.dumps(payload).encode()
+        req = urllib.request.Request(url, data=body, headers=self._cp_headers(), method="POST")
+
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read())
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode() if e.fp else ""
+            raise CoreSDKError(f"Create user failed ({e.code}): {error_body}") from e
+        except Exception as e:
+            raise CoreSDKError(f"Create user request failed: {e}") from e
+
+    def change_password(self, *, user_id: str, new_password: str) -> dict:
+        """Change a user's password via SCIM PATCH.
+
+        Calls PATCH /scim/v2/Users/:id on the control plane.
+        """
+        import urllib.request
+        import urllib.error
+
+        url = self._cp_url(f"/scim/v2/Users/{user_id}")
+        payload = {
+            "schemas": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+            "Operations": [
+                {"op": "replace", "path": "password", "value": new_password}
+            ],
+        }
+        body = json.dumps(payload).encode()
+        req = urllib.request.Request(url, data=body, headers=self._cp_headers(), method="PATCH")
+
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read())
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode() if e.fp else ""
+            raise CoreSDKError(f"Change password failed ({e.code}): {error_body}") from e
+        except Exception as e:
+            raise CoreSDKError(f"Change password request failed: {e}") from e
