@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from coresdk.v1 import common_pb2 as coresdk_dot_v1_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63oresdk/v1/config.proto\x12\ncoresdk.v1\x1a\x17\x63oresdk/v1/common.proto\"~\n\x10GetConfigRequest\x12\x31\n\x06tenant\x18\x01 \x01(\x0b\x32\x19.coresdk.v1.TenantContextR\x06tenant\x12\x37\n\x08metadata\x18\x02 \x01(\x0b\x32\x1b.coresdk.v1.RequestMetadataR\x08metadata\"\xc4\x01\n\x0e\x43onfigSnapshot\x12\x18\n\x07version\x18\x01 \x01(\tR\x07version\x12>\n\x06values\x18\x02 \x03(\x0b\x32&.coresdk.v1.ConfigSnapshot.ValuesEntryR\x06values\x12\x1d\n\nupdated_at\x18\x03 \x01(\x03R\tupdatedAt\x1a\x39\n\x0bValuesEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"|\n\x11GetConfigResponse\x12\x36\n\x08snapshot\x18\x01 \x01(\x0b\x32\x1a.coresdk.v1.ConfigSnapshotR\x08snapshot\x12/\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x19.coresdk.v1.ProblemDetailR\x05\x65rror\"j\n\x12WatchConfigRequest\x12\x31\n\x06tenant\x18\x01 \x01(\x0b\x32\x19.coresdk.v1.TenantContextR\x06tenant\x12!\n\x0clast_version\x18\x02 \x01(\tR\x0blastVersion2\xa6\x01\n\rConfigService\x12H\n\tGetConfig\x12\x1c.coresdk.v1.GetConfigRequest\x1a\x1d.coresdk.v1.GetConfigResponse\x12K\n\x0bWatchConfig\x12\x1e.coresdk.v1.WatchConfigRequest\x1a\x1a.coresdk.v1.ConfigSnapshot0\x01\x42.Z,github.com/coresdk-dev/sdk-go/gen/coresdk/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63oresdk/v1/config.proto\x12\ncoresdk.v1\x1a\x17\x63oresdk/v1/common.proto\"~\n\x10GetConfigRequest\x12\x31\n\x06tenant\x18\x01 \x01(\x0b\x32\x19.coresdk.v1.TenantContextR\x06tenant\x12\x37\n\x08metadata\x18\x02 \x01(\x0b\x32\x1b.coresdk.v1.RequestMetadataR\x08metadata\"\xed\x01\n\x0e\x43onfigSnapshot\x12\x18\n\x07version\x18\x01 \x01(\tR\x07version\x12>\n\x06values\x18\x02 \x03(\x0b\x32&.coresdk.v1.ConfigSnapshot.ValuesEntryR\x06values\x12\x1d\n\nupdated_at\x18\x03 \x01(\x03R\tupdatedAt\x12\'\n\x0fstorage_backend\x18\x04 \x01(\tR\x0estorageBackend\x1a\x39\n\x0bValuesEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"|\n\x11GetConfigResponse\x12\x36\n\x08snapshot\x18\x01 \x01(\x0b\x32\x1a.coresdk.v1.ConfigSnapshotR\x08snapshot\x12/\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x19.coresdk.v1.ProblemDetailR\x05\x65rror\"j\n\x12WatchConfigRequest\x12\x31\n\x06tenant\x18\x01 \x01(\x0b\x32\x19.coresdk.v1.TenantContextR\x06tenant\x12!\n\x0clast_version\x18\x02 \x01(\tR\x0blastVersion2\xa6\x01\n\rConfigService\x12H\n\tGetConfig\x12\x1c.coresdk.v1.GetConfigRequest\x1a\x1d.coresdk.v1.GetConfigResponse\x12K\n\x0bWatchConfig\x12\x1e.coresdk.v1.WatchConfigRequest\x1a\x1a.coresdk.v1.ConfigSnapshot0\x01\x42.Z,github.com/coresdk-dev/sdk-go/gen/coresdk/v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,13 +38,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETCONFIGREQUEST']._serialized_start=64
   _globals['_GETCONFIGREQUEST']._serialized_end=190
   _globals['_CONFIGSNAPSHOT']._serialized_start=193
-  _globals['_CONFIGSNAPSHOT']._serialized_end=389
-  _globals['_CONFIGSNAPSHOT_VALUESENTRY']._serialized_start=332
-  _globals['_CONFIGSNAPSHOT_VALUESENTRY']._serialized_end=389
-  _globals['_GETCONFIGRESPONSE']._serialized_start=391
-  _globals['_GETCONFIGRESPONSE']._serialized_end=515
-  _globals['_WATCHCONFIGREQUEST']._serialized_start=517
-  _globals['_WATCHCONFIGREQUEST']._serialized_end=623
-  _globals['_CONFIGSERVICE']._serialized_start=626
-  _globals['_CONFIGSERVICE']._serialized_end=792
+  _globals['_CONFIGSNAPSHOT']._serialized_end=430
+  _globals['_CONFIGSNAPSHOT_VALUESENTRY']._serialized_start=373
+  _globals['_CONFIGSNAPSHOT_VALUESENTRY']._serialized_end=430
+  _globals['_GETCONFIGRESPONSE']._serialized_start=432
+  _globals['_GETCONFIGRESPONSE']._serialized_end=556
+  _globals['_WATCHCONFIGREQUEST']._serialized_start=558
+  _globals['_WATCHCONFIGREQUEST']._serialized_end=664
+  _globals['_CONFIGSERVICE']._serialized_start=667
+  _globals['_CONFIGSERVICE']._serialized_end=833
 # @@protoc_insertion_point(module_scope)
